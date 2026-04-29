@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HART Production Bible</title>
+<style>
+  :root {
+    --bg: #0e0e10;
+    --panel: #16161a;
+    --ink: #ececf1;
+    --muted: #9a9aa8;
+    --accent: #ff5e5b;
+    --accent-2: #5bc0eb;
+    --good: #7bd389;
+    --warn: #f0c419;
+    --line: #2a2a32;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  header {
+    padding: 56px 8% 36px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, #18181d 0%, #0e0e10 100%);
+  }
+  h1 { font-size: 2.6rem; margin: 0 0 8px; letter-spacing: -0.02em; }
+  h2 {
+    font-size: 1.4rem;
+    margin: 0 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+    color: var(--accent-2);
+  }
+  h3 { color: var(--accent); margin-top: 24px; font-size: 1.05rem; }
+  .sub { color: var(--muted); font-size: 0.95rem; }
+  main { padding: 32px 8% 64px; max-width: 1100px; }
+  section {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+  }
+  a { color: var(--accent-2); text-decoration: none; }
+  a:hover { color: var(--accent); }
+  ul { padding-left: 20px; }
+  li { margin: 8px 0; }
+  .chapters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 8px;
+  }
+  .chapter {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px 20px;
+    background: #14141a;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .chapter:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .chapter h3 { margin: 0 0 6px; }
+  .chapter p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+  .pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 99px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    margin-right: 6px;
+  }
+  .pill-good { background: #1c3a23; color: var(--good); }
+  .pill-acc  { background: #2a1a1a; color: var(--accent); }
+  .callout {
+    border-left: 3px solid var(--accent-2);
+    background: #131b22;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin: 12px 0;
+  }
+  @media (max-width: 720px) { .chapters { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>HART Production Bible</h1>
+  <div class="sub">How the system works · public overview · v1.0</div>
+</header>
+
+<main>
+
+<section>
+  <h2>What this is</h2>
+  <p>
+    HART is a public art platform built around a single token (<strong>hART</strong>) on Solana.
+    This bible documents how the production systems behave — the rules, flows, and economic
+    levers — without exposing keys, internal endpoints, or operational secrets. It's split into
+    five chapters so each domain reads cleanly on its own.
+  </p>
+  <div class="callout">
+    Code, schema names, and pricing curves shown here describe <em>intent</em>. The live repo is the
+    source of truth for current implementation; this bible is the source of truth for design.
+  </div>
+</section>
+
+<section>
+  <h2>Chapters</h2>
+  <div class="chapters">
+    <a class="chapter" href="community-canvas.html">
+      <h3>1. Community Canvas</h3>
+      <p>Weekly 6900×6700 canvas, paint-by-burn, anti-grief curves, auction + 100% burn at week's end.</p>
+    </a>
+    <a class="chapter" href="gifting.html">
+      <h3>2. Gifting</h3>
+      <p>Sending hART and artworks wallet-to-wallet. Receipts, attribution, and refusal flow.</p>
+    </a>
+    <a class="chapter" href="trading.html">
+      <h3>3. Trading</h3>
+      <p>Peer-to-peer artwork swaps. Escrow shape, atomicity, and dispute boundaries.</p>
+    </a>
+    <a class="chapter" href="buying-selling.html">
+      <h3>4. Buying &amp; Selling</h3>
+      <p>Listings, fixed-price + auction, royalties, fee model, and the burn relay.</p>
+    </a>
+    <a class="chapter" href="profile.html">
+      <h3>5. Profile</h3>
+      <p>Identity, display preferences, ownership history, attribution surface, privacy toggles.</p>
+    </a>
+  </div>
+</section>
+
+<section>
+  <h2>Conventions used in this bible</h2>
+  <ul>
+    <li><span class="pill pill-good">RULE</span> A hard system invariant — code enforces it.</li>
+    <li><span class="pill pill-acc">DESIGN</span> A deliberate product choice — could be tuned, but reasoned.</li>
+    <li>Money is always denominated in <strong>hART</strong>. Solana is the settlement layer.</li>
+    <li>"Burn" means an on-chain transfer to a publicly-known burn address — anyone can verify.</li>
+    <li>"Platform wallet" is a relay address. It does not custody for users; it batches burns.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Out of scope (intentionally)</h2>
+  <ul>
+    <li>Keys, RPC endpoints, service URLs, deploy targets — never published here.</li>
+    <li>Moderator identities and the internal mod console.</li>
+    <li>Exact rate limits, anti-abuse heuristics, and fraud signals.</li>
+    <li>Database connection details and row-level security policies (covered in private security docs).</li>
+  </ul>
+</section>
+
+</main>
+
+</body>
+</html>

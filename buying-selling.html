@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buying &amp; Selling — HART Production Bible</title>
+<link rel="stylesheet" href="_style.css">
+</head>
+<body>
+
+<header>
+  <div class="crumb"><a href="index.html">← HART Production Bible</a> · Chapter 4 of 5</div>
+  <h1>Buying &amp; Selling</h1>
+  <div class="sub">Listings, fixed-price + auctions, royalties, fees, and the burn relay.</div>
+</header>
+
+<main>
+
+<section>
+  <h2>The two markets</h2>
+  <p>HART has two listing modes. Sellers choose one per artwork:</p>
+  <table>
+    <tr><th>Mode</th><th>How it works</th><th>Best for</th></tr>
+    <tr><td><strong>Fixed price</strong></td><td>Seller sets a price in hART. First buyer to sign wins.</td><td>Predictable inventory, instant collectors.</td></tr>
+    <tr><td><strong>Auction</strong></td><td>Time-boxed open bidding with a reserve. Highest bid at close wins.</td><td>Price discovery, scarce or contested pieces.</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Listing flow</h2>
+  <ol>
+    <li><span class="pill pill-info">DRAFT</span> Owner picks artwork, mode, and price/reserve. Adds optional duration for auctions.</li>
+    <li><span class="pill pill-info">REVIEW</span> System surfaces fee + royalty breakdown so the seller sees expected net before signing.</li>
+    <li><span class="pill pill-info">SIGN</span> Owner signs a list transaction. The artwork enters a <em>listed</em> state and is locked from gifts/trades.</li>
+    <li><span class="pill pill-info">LIVE</span> Listing is discoverable in the gallery, on the seller's profile, and on the artwork page.</li>
+    <li><span class="pill pill-info">CLOSE</span> Sale settles (see flows below) or seller delists. Delisting is free except network fee.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Fixed-price sale</h2>
+  <ol>
+    <li>Buyer clicks Buy on a listed artwork.</li>
+    <li>Buyer's wallet signs a transfer of <code>price</code> hART.</li>
+    <li>Atomic settlement: hART is split per the fee/royalty schedule, ownership transfers to buyer, listing closes.</li>
+    <li>Both sides receive a receipt; provenance writes a <em>sale</em> entry.</li>
+  </ol>
+  <div class="callout">
+    Fixed-price listings are <strong>first-come</strong>. Race conditions are resolved on-chain — the
+    first transaction to settle wins; later transactions revert with a clear error.
+  </div>
+</section>
+
+<section>
+  <h2>Auction sale</h2>
+  <ol>
+    <li>Seller starts an auction with <code>reserve</code> and <code>duration</code>.</li>
+    <li>Each bid escrows the bid amount on-chain. Out-bid bids auto-refund.</li>
+    <li><span class="pill pill-good">RULE</span> Anti-snipe extension: a bid in the final window extends the close time by a fixed amount. This prevents last-second sniping and is published in the auction page.</li>
+    <li>At close, if the top bid meets reserve: settle as a sale. If not: auction expires, no transfer.</li>
+    <li>Settlement is atomic and follows the same fee/royalty split as fixed-price sales.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Fee &amp; royalty model</h2>
+  <p>Every sale (fixed or auction) splits the gross sale price three ways:</p>
+  <table>
+    <tr><th>Slice</th><th>Goes to</th><th>Notes</th></tr>
+    <tr><td>Royalty</td><td>Original creator(s)</td><td>Per-artwork rate, set at mint and immutable. Multiple creators split per their declared shares.</td></tr>
+    <tr><td>Platform fee</td><td>Platform wallet</td><td>A small, published rate. Used to fund operations, then any surplus is burned on the same cadence as canvas burns.</td></tr>
+    <tr><td>Seller proceeds</td><td>Seller wallet</td><td>Whatever remains after royalty + fee.</td></tr>
+  </table>
+  <div class="callout note">
+    Exact fee and royalty percentages are published on the platform and may be adjusted with notice.
+    They are <em>not</em> baked into this bible because they are tunable parameters, not invariants.
+  </div>
+</section>
+
+<section>
+  <h2>The burn relay</h2>
+  <p>
+    The platform wallet is a <strong>relay, not a treasury</strong>. Funds that flow through it
+    for community-canvas auctions are burned on-chain in full. Surplus from ordinary platform fees
+    (after operating costs) is burned on a published cadence. Every burn is a single on-chain
+    transaction that anyone can verify against the public burn address.
+  </p>
+  <ul>
+    <li><span class="pill pill-good">RULE</span> Community canvas auctions: 100% burned, no carve-out.</li>
+    <li><span class="pill pill-good">RULE</span> Royalties go directly to creators on settlement, never through the relay.</li>
+    <li><span class="pill pill-acc">DESIGN</span> Burns are batched and announced. The platform never silently mints, holds, or redirects burn funds.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Locking &amp; conflicts</h2>
+  <table>
+    <tr><th>Action attempted on a listed artwork</th><th>Outcome</th></tr>
+    <tr><td>Gift</td><td>Rejected. Delist first.</td></tr>
+    <tr><td>Trade proposal</td><td>Rejected.</td></tr>
+    <tr><td>Re-list (different mode)</td><td>Rejected. Delist first.</td></tr>
+    <tr><td>Edit metadata that affects price/royalty</td><td>Rejected. Mutable fields like description can still be edited.</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Cancellation, expiry, refunds</h2>
+  <ul>
+    <li>Sellers may delist a fixed-price listing at any time before a buyer's transaction settles.</li>
+    <li>Auctions cannot be cancelled once a qualifying bid is placed (this is enforced on-chain — protects bidders).</li>
+    <li>Failed settlement (e.g., wallet rejects, network drops) reverts atomically. No partial state.</li>
+    <li>Out-bid bids are refunded automatically by the auction contract.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Anti-abuse &amp; integrity</h2>
+  <ul>
+    <li>Wash-trade detection on suspicious self-circular sales — flagged listings are reviewed; provenance can be annotated with a wash flag.</li>
+    <li>Mod removal of TOS-violating artworks voids any active listing and refunds all live bids.</li>
+    <li>Artwork pages render canonical metadata only. Seller-supplied descriptions are sanitized; external links are inert until manually expanded.</li>
+  </ul>
+</section>
+
+<div class="next">
+  <a href="trading.html"><div class="label">← Previous</div><div class="title">Trading</div></a>
+  <a href="profile.html"><div class="label">Next →</div><div class="title">Profile</div></a>
+</div>
+
+</main>
+</body>
+</html>

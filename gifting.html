@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gifting — HART Production Bible</title>
+<link rel="stylesheet" href="_style.css">
+</head>
+<body>
+
+<header>
+  <div class="crumb"><a href="index.html">← HART Production Bible</a> · Chapter 2 of 5</div>
+  <h1>Gifting</h1>
+  <div class="sub">Sending hART or artworks wallet-to-wallet, with attribution and a refusal path.</div>
+</header>
+
+<main>
+
+<section>
+  <h2>What gifting is, and isn't</h2>
+  <p>
+    Gifting is a <strong>one-way, no-consideration transfer</strong> of either hART or an owned artwork
+    from one wallet to another. There is no exchange, no escrow, no royalty — it's a direct send the
+    sender chose to make. Trades and sales live in their own chapters.
+  </p>
+  <ul>
+    <li><span class="pill pill-good">RULE</span> A gift is unconditional. Once accepted, it is final.</li>
+    <li><span class="pill pill-good">RULE</span> The sender pays the on-chain transaction cost.</li>
+    <li><span class="pill pill-acc">DESIGN</span> Recipients always have the right to refuse before acceptance is recorded.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>What can be gifted</h2>
+  <table>
+    <tr><th>Asset</th><th>Notes</th></tr>
+    <tr><td>hART</td><td>Any whole or fractional amount the sender holds.</td></tr>
+    <tr><td>Artwork</td><td>Any artwork the sender currently owns and that is not locked in an active listing, trade, or auction.</td></tr>
+    <tr><td>Canvas (won)</td><td>An auction-won weekly canvas, after the burn has settled.</td></tr>
+  </table>
+  <div class="callout warn">
+    Items that are <strong>actively listed</strong>, <strong>in escrow</strong>, or <strong>under
+    moderation review</strong> cannot be gifted until they exit that state. The system rejects the
+    gift attempt rather than silently un-listing.
+  </div>
+</section>
+
+<section>
+  <h2>Flow</h2>
+  <ol>
+    <li><span class="pill pill-info">DRAFT</span> Sender picks asset + recipient (wallet, handle, or profile link) and writes an optional note.</li>
+    <li><span class="pill pill-info">PREVIEW</span> System shows network fee + a clear "this cannot be reversed once accepted" notice.</li>
+    <li><span class="pill pill-info">SIGN</span> Sender signs the transfer in their wallet.</li>
+    <li><span class="pill pill-info">PENDING</span> The gift sits in the recipient's inbox. Asset is escrowed by the contract until the recipient acts — sender cannot reclaim, only the recipient resolves it.</li>
+    <li><span class="pill pill-good">ACCEPT</span> Recipient accepts → asset moves to recipient wallet → receipt logged on both profiles.</li>
+    <li><span class="pill pill-warn">REFUSE</span> Recipient declines → asset returns to sender → both sides see a refusal record.</li>
+    <li><span class="pill pill-warn">EXPIRE</span> If neither happens within the inbox window, the gift auto-refunds to the sender.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Receipts &amp; attribution</h2>
+  <p>Every gift writes a receipt visible to both wallets. Receipts contain:</p>
+  <ul>
+    <li>Sender wallet, recipient wallet, asset reference, amount or artwork ID</li>
+    <li>Optional sender note (rendered as plain text, never HTML)</li>
+    <li>Timestamp and on-chain transaction signature</li>
+    <li>Final state: <code>accepted</code>, <code>refused</code>, or <code>expired</code></li>
+  </ul>
+  <div class="callout note">
+    Artworks track their <strong>full ownership history</strong>. A gift is recorded as a transfer
+    with a <em>gift</em> reason code, distinguishing it from a sale or trade in the artwork's
+    provenance trail.
+  </div>
+</section>
+
+<section>
+  <h2>Fees &amp; economics</h2>
+  <ul>
+    <li><span class="pill pill-good">RULE</span> The platform charges <strong>no fee</strong> on gifts. The only cost is the network transaction fee.</li>
+    <li><span class="pill pill-good">RULE</span> Royalties are <strong>not triggered</strong> by a gift. Royalties only apply on sales.</li>
+    <li><span class="pill pill-acc">DESIGN</span> This is intentional: monetizing gifting would warp the social fabric of the platform.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Anti-abuse</h2>
+  <ul>
+    <li>Rate-limited gift sends per wallet per window — exact thresholds are not published, to keep them useful against spam.</li>
+    <li>A gift to a wallet that has blocked the sender is auto-refused.</li>
+    <li>Notes are stripped of links by default; whitelisted patterns (artwork URLs on the platform) render as inert text.</li>
+    <li>Mods can void a pending gift if it is part of a confirmed harassment pattern; voided gifts refund the sender.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Edge cases the system handles</h2>
+  <table>
+    <tr><th>Case</th><th>Behavior</th></tr>
+    <tr><td>Recipient wallet doesn't exist on platform yet</td><td>Gift waits in a claim state addressed to that wallet. First time the wallet signs in, the inbox is populated.</td></tr>
+    <tr><td>Sender's balance moves below required amount before sign</td><td>Sign step rejects with a clear error. Nothing on-chain happens.</td></tr>
+    <tr><td>Artwork is removed by mods after gift is sent but before accept</td><td>Pending gift auto-voids; sender refunded; recipient sees a void notice with reason code.</td></tr>
+    <tr><td>Recipient deletes their profile</td><td>Pending gift expires per the standard timer and refunds.</td></tr>
+  </table>
+</section>
+
+<div class="next">
+  <a href="community-canvas.html"><div class="label">← Previous</div><div class="title">Community Canvas</div></a>
+  <a href="trading.html"><div class="label">Next →</div><div class="title">Trading</div></a>
+</div>
+
+</main>
+</body>
+</html>

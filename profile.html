@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile — HART Production Bible</title>
+<link rel="stylesheet" href="_style.css">
+</head>
+<body>
+
+<header>
+  <div class="crumb"><a href="index.html">← HART Production Bible</a> · Chapter 5 of 5</div>
+  <h1>Profile</h1>
+  <div class="sub">Identity, display preferences, history, and what other people see.</div>
+</header>
+
+<main>
+
+<section>
+  <h2>What a profile is</h2>
+  <p>
+    A profile is the public face of a <strong>wallet</strong>. The wallet is the canonical identity
+    on HART — the profile is a presentation layer over it. You don't need a profile to use the
+    platform; the wallet is enough. A profile lets you customize how others see your activity.
+  </p>
+  <ul>
+    <li><span class="pill pill-good">RULE</span> One wallet = one profile. Profiles cannot be transferred separately from the wallet.</li>
+    <li><span class="pill pill-good">RULE</span> Display name, bio, and avatar are presentation only — the wallet address is the source of truth.</li>
+    <li><span class="pill pill-acc">DESIGN</span> Anyone can view any profile. Privacy is per-section, not per-profile.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Profile sections</h2>
+  <table>
+    <tr><th>Section</th><th>What's shown</th><th>Default visibility</th></tr>
+    <tr><td>Header</td><td>Display name, avatar, bio, wallet (truncated, copyable)</td><td>Public</td></tr>
+    <tr><td>Owned</td><td>Artworks currently owned by this wallet</td><td>Public, per-item toggle</td></tr>
+    <tr><td>Created</td><td>Artworks this wallet originally minted</td><td>Public</td></tr>
+    <tr><td>Listings</td><td>Active fixed-price + auction listings</td><td>Public (always — they are market state)</td></tr>
+    <tr><td>Canvas contributions</td><td>Pixels painted, weeks participated, won canvases</td><td>Public</td></tr>
+    <tr><td>Activity</td><td>Sales, gifts sent/received, trades</td><td>Per-event privacy controls</td></tr>
+    <tr><td>Burn record</td><td>hART this wallet has caused to be burned (canvas wins, voluntary burns)</td><td>Public</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Editable fields</h2>
+  <ul>
+    <li><strong>Display name</strong> — unique within the platform, alphanumeric + limited symbols, profanity-screened.</li>
+    <li><strong>Bio</strong> — short text, sanitized, no executable links.</li>
+    <li><strong>Avatar</strong> — image upload or pick from owned artworks.</li>
+    <li><strong>Banner</strong> — optional, similar rules to avatar.</li>
+    <li><strong>Social handles</strong> — opt-in, displayed as plain text by default and verified via signed challenges where supported.</li>
+  </ul>
+  <div class="callout">
+    Editing a field signs a lightweight off-chain update. It does <em>not</em> touch on-chain state
+    or cost hART. The wallet must sign to authenticate the change.
+  </div>
+</section>
+
+<section>
+  <h2>Privacy controls</h2>
+  <p>Privacy on HART is granular, not all-or-nothing:</p>
+  <ul>
+    <li><span class="pill pill-info">PER-ITEM</span> Each owned artwork can be hidden from the public Owned grid (it remains visible on its own page if linked directly — provenance is a public good).</li>
+    <li><span class="pill pill-info">PER-EVENT</span> Activity entries (gifts, trades, sales) can be hidden individually from the activity feed. The on-chain record is unaffected.</li>
+    <li><span class="pill pill-info">CANVAS</span> Auction-won canvases have a public/private display toggle; if private, the canvas does not appear on the buyer's profile but still shows the buyer credit on the canvas wall.</li>
+  </ul>
+  <div class="callout warn">
+    HART cannot make on-chain history private. If something happens on-chain, anyone running a
+    Solana indexer can see it. The privacy toggles only affect what HART itself surfaces in its UI.
+  </div>
+</section>
+
+<section>
+  <h2>Attribution that profiles cannot hide</h2>
+  <p>Some surfaces are deliberately not togglable, because hiding them would erase someone else's earned credit:</p>
+  <ul>
+    <li><strong>Painter attribution on the community canvas</strong> — every painter is permanently credited on the wall. Display name shown if the wallet has one, truncated address otherwise.</li>
+    <li><strong>Creator credit on artworks</strong> — minting wallet is always shown on the artwork's detail page.</li>
+    <li><strong>Buyer credit on auction-won canvases</strong> — even if the buyer hides the canvas from their profile, the canvas page still credits the winning wallet.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Verification</h2>
+  <ul>
+    <li>Verified social links are signed off-chain challenges. The platform shows a small verified badge next to verified handles.</li>
+    <li>Verification is tied to the wallet, not the display name. Renaming preserves verification.</li>
+    <li>The platform does not sell verification and does not bestow it on identity claims it cannot cryptographically check.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Inbox</h2>
+  <p>The inbox is part of the profile experience but private to the wallet. It surfaces:</p>
+  <ul>
+    <li>Pending gifts (accept / refuse)</li>
+    <li>Incoming trade proposals (accept / counter / decline)</li>
+    <li>Auction events relevant to the wallet (out-bid, won, won and pending settlement)</li>
+    <li>Mod notices (e.g., voided gift, removed artwork)</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Account closure</h2>
+  <ul>
+    <li>A wallet can request profile deletion. The display layer (name, bio, avatar) is removed.</li>
+    <li>On-chain history persists. Wherever a profile is referenced (e.g., painter wall, artwork provenance), the truncated wallet address is shown without display-name decoration.</li>
+    <li>Re-linking the same wallet later restores the option to create a new profile.</li>
+  </ul>
+</section>
+
+<div class="next">
+  <a href="buying-selling.html"><div class="label">← Previous</div><div class="title">Buying &amp; Selling</div></a>
+  <a href="index.html"><div class="label">Back to</div><div class="title">Index</div></a>
+</div>
+
+</main>
+</body>
+</html>

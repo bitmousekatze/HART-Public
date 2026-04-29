@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community Canvas — HART Production Bible</title>
+<link rel="stylesheet" href="_style.css">
+</head>
+<body>
+
+<header>
+  <div class="crumb"><a href="index.html">← HART Production Bible</a> · Chapter 1 of 5</div>
+  <h1>Community Canvas</h1>
+  <div class="sub">A weekly shared canvas painted by burning hART, auctioned, then 100% burned.</div>
+</header>
+
+<main>
+
+<section>
+  <h2>One-paragraph summary</h2>
+  <p>
+    Every week, a fresh <strong>6900 × 6700</strong> white canvas opens. Anyone can claim a pixel
+    by burning hART. Pricing scales with day-of-week and how many times a pixel has already been
+    painted, which keeps the early canvas cheap and contested zones expensive. After 7 days the
+    canvas locks, archives to the wall with full painter attribution, and is auctioned. <strong>100% of
+    the auction proceeds are burned</strong> on-chain via a public burn address — verifiable by anyone.
+  </p>
+</section>
+
+<section>
+  <h2>Lifecycle</h2>
+  <ol>
+    <li><span class="pill pill-info">OPEN</span> Monday 00:00 UTC: a new blank canvas opens.</li>
+    <li><span class="pill pill-info">PAINT</span> 7 days of open painting. Pricing curve climbs each day.</li>
+    <li><span class="pill pill-info">LOCK</span> At T+7d the canvas freezes. State is snapshotted.</li>
+    <li><span class="pill pill-info">AUCTION</span> A single-winner auction opens for the locked canvas.</li>
+    <li><span class="pill pill-acc">BURN</span> The full winning bid is burned. Tx hash is published.</li>
+    <li><span class="pill pill-good">SHIP</span> The canvas asset goes to the buyer; the wall keeps full painter attribution forever.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Pricing</h2>
+  <p>Two curves: <strong>fresh claim</strong> for white pixels, <strong>overwrite</strong> for already-painted ones.</p>
+
+  <h3>Fresh claim — scarcity × time</h3>
+  <pre>cost = base × day_multiplier
+base = 1 hART
+day_multiplier: d1=1, d2=1, d3=2, d4=3, d5=4, d6=5, d7=7</pre>
+
+  <h3>Overwrite — anti-grief curve</h3>
+  <pre>cost = day_multiplier × 2 ^ times_painted</pre>
+
+  <table>
+    <tr><th>Times painted</th><th>Day 1</th><th>Day 4</th><th>Day 7</th></tr>
+    <tr><td>1 (first overwrite)</td><td>2</td><td>6</td><td>14</td></tr>
+    <tr><td>3</td><td>8</td><td>24</td><td>56</td></tr>
+    <tr><td>5</td><td>32</td><td>96</td><td>224</td></tr>
+    <tr><td>8</td><td>256</td><td>768</td><td>1,792</td></tr>
+  </table>
+
+  <div class="callout">
+    Cheap empty corners stay cheap. War zones get prohibitively expensive. The curve does the
+    moderation work that humans shouldn't have to.
+  </div>
+</section>
+
+<section>
+  <h2>Anti-grief rules</h2>
+  <ul>
+    <li><span class="pill pill-good">CAP</span> No wallet may paint more than <strong>10%</strong> of the canvas in a single week.</li>
+    <li><span class="pill pill-good">CURVE</span> Overwrite cost doubles per repaint and multiplies by day index — late-week carpet-bombing is uneconomical.</li>
+    <li><span class="pill pill-warn">MOD</span> Mods can remove TOS-violating regions. Pixels return to white but retain their <code>times_painted</code> counter, so re-griefing the same coords still costs more.</li>
+    <li><span class="pill pill-warn">FORFEIT</span> Mod-removed pixels are not refunded. Removed = forfeited.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Auction &amp; burn flow</h2>
+  <ol>
+    <li>Canvas closes after 7 days. State frozen, wall snapshot generated.</li>
+    <li>Auction opens for a fixed window (single highest-bid wins).</li>
+    <li>Funds settle to the platform wallet (a relay, not custody).</li>
+    <li>The full amount is burned on-chain via a public burn address. Tx is announced.</li>
+    <li>Canvas asset is delivered to the buyer. Buyer can choose public profile display or private hold.</li>
+    <li>The wall always keeps each painter's attribution — wallet + display name + pixel count.</li>
+  </ol>
+
+  <div class="callout note">
+    <strong>No middlemen, no take rate.</strong> 100% of auction proceeds are burned. The platform
+    wallet is just a relay so the burn can be a single clean transaction the public can audit.
+  </div>
+
+  <h3>Unsold canvases</h3>
+  <ul>
+    <li>If the auction closes with no qualifying bid, the canvas rolls into the <strong>Gallery</strong> at fixed buy-now pricing.</li>
+    <li>Whenever a gallery canvas eventually sells, the same burn-and-ship flow runs — funds are still 100% burned.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Painter &amp; buyer rights</h2>
+  <table>
+    <tr><th>Role</th><th>Receives</th></tr>
+    <tr><td>Auction winner</td><td>Canvas asset · public/private display toggle on profile · permanent buyer credit on the wall</td></tr>
+    <tr><td>Every painter</td><td>Wall attribution: wallet + display name + total pixels contributed, visible on the canvas detail page</td></tr>
+    <tr><td>Mods</td><td>Region-removal tooling · audit log of all removals</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Data model — shape only</h2>
+  <pre>weekly_canvas       (id, week_start, week_end, state, buyer, sale_amount, burn_tx)
+canvas_pixel        (canvas_id, x, y, color, current_owner, times_painted, last_paint_at)
+paint_event         (append-only audit: canvas, x, y, wallet, color, cost, day_index)
+wallet_canvas_stats (canvas_id, wallet, pixels_painted)  — enforces 10% cap cheaply</pre>
+
+  <p class="sub">
+    Field names and column types are illustrative — the live schema is the source of truth.
+    The shape is what matters: pixels are state, paint_events are the append-only audit, stats
+    are a cheap rollup.
+  </p>
+</section>
+
+<div class="next">
+  <a href="index.html"><div class="label">Index</div><div class="title">All chapters</div></a>
+  <a href="gifting.html"><div class="label">Next →</div><div class="title">Gifting</div></a>
+</div>
+
+</main>
+</body>
+</html>

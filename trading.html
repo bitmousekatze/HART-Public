@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trading — HART Production Bible</title>
+<link rel="stylesheet" href="_style.css">
+</head>
+<body>
+
+<header>
+  <div class="crumb"><a href="index.html">← HART Production Bible</a> · Chapter 3 of 5</div>
+  <h1>Trading</h1>
+  <div class="sub">Peer-to-peer artwork swaps. Atomic, opt-in, no platform middle.</div>
+</header>
+
+<main>
+
+<section>
+  <h2>What a trade is</h2>
+  <p>
+    A trade is a <strong>two-sided, atomic exchange</strong>: each side offers items (artworks
+    and/or hART), both sides sign, and the swap settles in a single transaction. Either side can
+    walk away before signing; once both have signed, the trade either fully settles or fully
+    reverts — never partial.
+  </p>
+  <ul>
+    <li><span class="pill pill-good">RULE</span> Atomicity. Both legs settle together or neither does.</li>
+    <li><span class="pill pill-good">RULE</span> Both wallets must sign. There is no unilateral trade.</li>
+    <li><span class="pill pill-acc">DESIGN</span> The platform does not arbitrate fairness. Trades are voluntary.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>What can be on each side</h2>
+  <p>An offer is a basket. Each side's basket may contain:</p>
+  <ul>
+    <li>Zero or more <strong>artworks</strong> the offerer currently owns and that are not locked elsewhere.</li>
+    <li>An optional <strong>hART amount</strong> to balance the trade.</li>
+  </ul>
+  <p>Empty baskets are allowed on at most one side (i.e. a "give" is a gift; see the gifting chapter — the system routes such cases through the gift flow instead).</p>
+</section>
+
+<section>
+  <h2>Lifecycle</h2>
+  <ol>
+    <li><span class="pill pill-info">PROPOSE</span> Initiator builds a two-sided offer and sends it to the counterparty's inbox.</li>
+    <li><span class="pill pill-info">REVIEW</span> Counterparty inspects items, balances, and any on-chain conditions. Can counter, decline, or accept.</li>
+    <li><span class="pill pill-info">COUNTER</span> A counter is a new proposal that supersedes the previous one. Old proposal is voided.</li>
+    <li><span class="pill pill-info">LOCK</span> When both sides accept, all listed items are locked from other actions.</li>
+    <li><span class="pill pill-info">SIGN</span> Each side signs the swap transaction in their wallet.</li>
+    <li><span class="pill pill-good">SETTLE</span> Atomic on-chain swap. Ownership flips for all items in one tx.</li>
+    <li><span class="pill pill-warn">CANCEL</span> Before final signing, either side can cancel — items unlock immediately.</li>
+    <li><span class="pill pill-warn">EXPIRE</span> Proposals auto-expire if not acted on within the standard window.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Locking rules</h2>
+  <table>
+    <tr><th>Item state</th><th>Eligible for trade?</th></tr>
+    <tr><td>Owned, idle</td><td>Yes</td></tr>
+    <tr><td>Listed for sale</td><td>No — owner must delist first</td></tr>
+    <tr><td>In another trade proposal</td><td>No — only one open trade at a time per item</td></tr>
+    <tr><td>Pending gift</td><td>No</td></tr>
+    <tr><td>Under moderation review</td><td>No</td></tr>
+  </table>
+  <div class="callout">
+    The single-open-trade-per-item rule prevents accidental double-commits. If you need to entertain
+    multiple offers, use the auction flow under Buying &amp; Selling.
+  </div>
+</section>
+
+<section>
+  <h2>Royalties &amp; fees</h2>
+  <ul>
+    <li><span class="pill pill-good">RULE</span> If a trade includes <strong>any hART</strong> on either side, royalties on the artwork(s) moving in the opposite direction are paid based on the hART leg.</li>
+    <li><span class="pill pill-good">RULE</span> A pure artwork-for-artwork swap (no hART either side) is treated as a barter and pays <strong>no royalties</strong>.</li>
+    <li><span class="pill pill-acc">DESIGN</span> Bartering shouldn't be punished, but cash-balanced swaps are sales in disguise — they pay artists.</li>
+    <li>Platform fee on trades with hART is the same rate as on direct sales (see Buying &amp; Selling).</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Receipts &amp; provenance</h2>
+  <p>A settled trade writes one receipt visible to both sides and updates each artwork's provenance with a <em>trade</em> reason code. The receipt records:</p>
+  <ul>
+    <li>Both wallets, full basket on each side, hART amounts</li>
+    <li>Royalties paid (if any) and to which creators</li>
+    <li>Settlement transaction signature</li>
+    <li>Optional message attached to the proposal</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Disputes</h2>
+  <p>
+    Because trades are atomic and both-sides-signed, post-settlement disputes about <em>what was
+    swapped</em> do not exist — the on-chain record is final. The only dispute surface is
+    <strong>off-platform claims</strong> (e.g., "we agreed I'd add more hART later"). The platform
+    does not enforce or arbitrate side agreements; users are advised to put all consideration
+    inside the trade itself.
+  </p>
+  <div class="callout warn">
+    If you intend to receive payment "after" a transfer, that is a sale, not a trade — use the
+    sale flow so the system handles escrow and royalty correctly.
+  </div>
+</section>
+
+<section>
+  <h2>Anti-abuse</h2>
+  <ul>
+    <li>Proposal sends are rate-limited per wallet to prevent inbox spam.</li>
+    <li>A counterparty who has blocked the sender will not receive proposals.</li>
+    <li>Mods can void a pending proposal that involves a flagged artwork; pending locks release.</li>
+    <li>Asset previews in the proposal are rendered from canonical, sanitized metadata only.</li>
+  </ul>
+</section>
+
+<div class="next">
+  <a href="gifting.html"><div class="label">← Previous</div><div class="title">Gifting</div></a>
+  <a href="buying-selling.html"><div class="label">Next →</div><div class="title">Buying &amp; Selling</div></a>
+</div>
+
+</main>
+</body>
+</html>
