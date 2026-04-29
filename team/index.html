@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Team — HART Production Bible</title>
+<link rel="stylesheet" href="../_style.css">
+<style>
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  .member {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px 20px;
+    background: #14141a;
+    text-decoration: none;
+    color: var(--ink);
+    transition: border-color 0.15s, transform 0.15s;
+    display: block;
+  }
+  .member:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .member .role {
+    color: var(--muted);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  .member .name {
+    font-size: 1.3rem;
+    color: var(--accent-2);
+    margin-bottom: 8px;
+  }
+  .member .blurb {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="crumb"><a href="../index.html">← HART Production Bible</a> · The Team</div>
+  <h1>The Team</h1>
+  <div class="sub">The people behind HART. Handles, not legal names — by choice.</div>
+</header>
+
+<main>
+
+<section>
+  <h2>Why handles?</h2>
+  <p>
+    Everyone on the team uses a handle. Not because we're hiding — most of us are reachable in
+    public Discord every day — but because <strong>HART was never meant to be about us</strong>.
+    The art is the point. The artists are the point. We're the people who stayed up too late
+    writing the code, drawing the mascots, and answering the messages.
+  </p>
+  <p>
+    These pages exist so anyone considering uploading their work, joining the community, or just
+    trying to understand who's running this thing has a real human voice to read — not a generic
+    "About Us" boilerplate.
+  </p>
+</section>
+
+<section>
+  <h2>Meet everyone</h2>
+  <div class="team-grid">
+    <a class="member" href="katze.html">
+      <div class="role">Founder &amp; Developer</div>
+      <div class="name">Katze</div>
+      <p class="blurb">Believes code is the new way to change the world. Wrote the platform.</p>
+    </a>
+    <a class="member" href="doggo.html">
+      <div class="role">Artist &amp; Community Lead</div>
+      <div class="name">Doggo</div>
+      <p class="blurb">Draws because it feels good. Watching AI flood his feed is what made HART real.</p>
+    </a>
+    <a class="member" href="amethyst.html">
+      <div class="role">Artist &amp; Community Voice</div>
+      <div class="name">Amethyst</div>
+      <p class="blurb">Makes things you can hold. Believes the proof a human made it is the point.</p>
+    </a>
+    <a class="member" href="mouse.html">
+      <div class="role">Artist &amp; Growth</div>
+      <div class="name">Mouse</div>
+      <p class="blurb">Loud, broke, loyal. Does the hype work and stays up too late helping friends.</p>
+    </a>
+    <a class="member" href="bunny.html">
+      <div class="role">Community Outreach</div>
+      <div class="name">Bunny</div>
+      <p class="blurb">Quiet by nature, loud through her pencil. Draws what most people walk past.</p>
+    </a>
+  </div>
+</section>
+
+<section>
+  <h2>What you won't find here</h2>
+  <ul>
+    <li>Real names, photos, or contact details. The handles and Discord are how to reach us.</li>
+    <li>Wallet addresses or financial figures. Those live on the live platform, not in design docs.</li>
+    <li>An "advisory board" or fake titles. The team is the team — five people who actually do the work.</li>
+  </ul>
+</section>
+
+<div class="next">
+  <a href="../index.html"><div class="label">Back to</div><div class="title">Bible Index</div></a>
+  <a href="katze.html"><div class="label">First profile →</div><div class="title">Katze</div></a>
+</div>
+
+</main>
+</body>
+</html>

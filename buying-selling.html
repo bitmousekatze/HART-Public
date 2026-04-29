@@ -39,6 +39,16 @@
 
 <section>
   <h2>Fixed-price sale</h2>
+  <div class="image-row">
+    <figure>
+      <img src="images/BuyerPays.jpeg" alt="Buyer pays">
+      <figcaption>Buyer signs a hART transfer for the listed price.</figcaption>
+    </figure>
+    <figure>
+      <img src="images/BuyerGetsArt.jpeg" alt="Buyer receives the artwork">
+      <figcaption>Atomic settlement: ownership flips, listing closes.</figcaption>
+    </figure>
+  </div>
   <ol>
     <li>Buyer clicks Buy on a listed artwork.</li>
     <li>Buyer's wallet signs a transfer of <code>price</code> hART.</li>
@@ -53,6 +63,10 @@
 
 <section>
   <h2>Auction sale</h2>
+  <figure>
+    <img src="images/Auction.png" alt="Auction">
+    <figcaption>Time-boxed open bidding with a reserve, anti-snipe extension on late bids.</figcaption>
+  </figure>
   <ol>
     <li>Seller starts an auction with <code>reserve</code> and <code>duration</code>.</li>
     <li>Each bid escrows the bid amount on-chain. Out-bid bids auto-refund.</li>
@@ -79,6 +93,10 @@
 
 <section>
   <h2>The burn relay</h2>
+  <figure>
+    <img src="images/fireburning1.gif" alt="Burning">
+    <figcaption>Burns are batched into single on-chain transactions, public for audit.</figcaption>
+  </figure>
   <p>
     The platform wallet is a <strong>relay, not a treasury</strong>. Funds that flow through it
     for community-canvas auctions are burned on-chain in full. Surplus from ordinary platform fees
