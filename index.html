@@ -133,6 +133,19 @@
     height: 100%;
     object-fit: cover;
   }
+  .onchain-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 430px;
+    background:
+      linear-gradient(90deg, rgba(22,22,26,0.94) 0%, rgba(22,22,26,0.78) 54%, rgba(22,22,26,0.16) 100%),
+      url("images/Onchain.png") center center / cover no-repeat;
+  }
+  .onchain-card h2,
+  .onchain-card ul {
+    position: relative;
+    max-width: 620px;
+  }
   @media (max-width: 720px) {
     .chapters { grid-template-columns: 1fr; }
     .hero-image { width: 140px; height: 140px; }
@@ -174,7 +187,7 @@
   <div class="chapters">
     <a class="chapter" href="community-canvas.html">
       <h3>1. Community Canvas</h3>
-      <p>Weekly 6900×6700 canvas, paint-by-burn, anti-grief curves, auction + 100% burn at week's end.</p>
+      <p>Two ways to paint: a 10k×10k pixel canvas, or artist-uploaded outline sections the community claims and colors in.</p>
     </a>
     <a class="chapter" href="gifting.html">
       <h3>2. Gifting</h3>
@@ -230,7 +243,7 @@
   </div>
 </section>
 
-<section>
+<section class="onchain-card">
   <h2>Conventions used in this bible</h2>
   <ul>
     <li><span class="pill pill-good">RULE</span> A hard system invariant — code enforces it.</li>
@@ -239,10 +252,6 @@
     <li>"Burn" means an on-chain transfer to a publicly-known burn address — anyone can verify.</li>
     <li>"Platform wallet" is a relay address. It does not custody for users; it batches burns.</li>
   </ul>
-  <figure>
-    <img src="images/Onchain.png" alt="On-chain settlement">
-    <figcaption>Every value-moving action settles on Solana — anyone can verify.</figcaption>
-  </figure>
 </section>
 
 <section>
